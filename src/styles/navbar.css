@@ -1,0 +1,112 @@
+/* Navbar container */
+.navbar {
+  display: flex;
+  justify-content: space-between; /* left, center, right */
+  align-items: center;
+  padding: 10px 20px;
+  background-color: var(--primary);
+  flex-wrap: wrap; /* ensures responsiveness */
+  gap: 10px;
+  font-family: 'Poppins', sans-serif; /* new font */
+}
+
+/* Left: logo */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  height: 45px; /* slightly bigger */
+  width: auto;
+}
+
+.logo-text {
+  font-size: 1.7rem; /* bigger */
+  font-weight: bold;
+  color: var(--accent);
+}
+
+/* Center: nav links */
+.navbar-center {
+  display: flex;
+  gap: 30px; /* slightly bigger spacing */
+  justify-content: center;
+  flex: 1; /* take up remaining space to stay centered */
+  flex-wrap: wrap;
+}
+
+.nav-link {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2rem; /* bigger letters */
+  position: relative; /* for underline */
+  padding-bottom: 4px; /* space for underline */
+  transition: color 0.3s ease;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0%;
+  background-color: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+  color: var(--accent);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Active link styling */
+.nav-link.active {
+  color: var(--accent);
+}
+
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* Right: icon */
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.nav-icon {
+  height: 35px; /* slightly bigger */
+  width: auto;
+}
+
+/* Responsive: tablet/mobile */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .navbar-center {
+    justify-content: flex-start;
+    flex-direction: column; /* stack links vertically */
+    gap: 8px;
+    margin: 10px 0;
+  }
+
+  .navbar-right {
+    margin-top: 5px;
+  }
+
+  .nav-link::after {
+    bottom: 0;
+    height: 2px;
+  }
+}
