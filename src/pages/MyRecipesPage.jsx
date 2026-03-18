@@ -23,12 +23,10 @@ function MyRecipesPage() {
         setMessage("Guests do not have saved recipes.");
         return;
       }
-
       if (!user) {
         setError("No logged-in user found.");
         return;
       }
-
       try {
         const savedRecipes = await getSavedRecipesForUser(user.uid);
         setRecipes(savedRecipes);
@@ -39,7 +37,6 @@ function MyRecipesPage() {
         setError("Failed to load saved recipes.");
       }
     }
-
     loadRecipes();
   }, [user, isGuest]);
 
@@ -166,7 +163,6 @@ function MyRecipesPage() {
                   </section>
 
                   <br />
-
                   <button type="button" onClick={() => handleDelete(recipe.id)}>
                     Delete
                   </button>
