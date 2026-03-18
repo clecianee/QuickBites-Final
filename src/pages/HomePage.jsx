@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
 import { getSavedRecipesForUser } from "../services/recipeStoreService";
-import {
-  getCurrentTemperature,
-  getWeatherCategory,
-  getWeatherSearchQuery,
-} from "../services/weatherService";
+import { getCurrentTemperature, getWeatherCategory } from "../services/weatherService";
 import { getWeatherRecipeSuggestions } from "../services/recipeService";
+
+import "../styles/home.css";
+import logo from "../images/logo.png";
 
 function HomePage() {
   const { user, isGuest } = useAuth();
@@ -26,15 +25,12 @@ function HomePage() {
         setTriedCount(0);
         return;
       }
-
-      if (!user) {
-        return;
-      }
+      if (!user) return;
 
       try {
         const savedRecipes = await getSavedRecipesForUser(user.uid);
         setSavedCount(savedRecipes.length);
-        setTriedCount(savedRecipes.filter((recipe) => recipe.tried).length);
+        setTriedCount(savedRecipes.filter(r => r.tried).length);
         setError("");
       } catch (err) {
         console.error("Load recipe summary error:", err);
@@ -53,9 +49,6 @@ function HomePage() {
         setWeatherError("");
 
         const category = getWeatherCategory(weatherData.temperature);
-        const weatherSearchQuery = getWeatherSearchQuery(category);
-        console.log("Home weather search query:", weatherSearchQuery);
-
         const recipes = await getWeatherRecipeSuggestions(category);
         setSuggestedRecipes(recipes);
       } catch (err) {
@@ -72,51 +65,52 @@ function HomePage() {
       <Navbar />
 
       <main className="page-container">
-        <header>
+        {/* Header with logo */}
+        <header className="home-header">
+          <img src={logo} alt="QuickBites Logo" className="home-logo" />
           <h1>Welcome to QuickBites</h1>
         </header>
 
-        <section>
-          {isGuest ? (
-            <p>You are browsing as a guest.</p>
-          ) : (
-            <p>You are logged in as {user?.email}.</p>
-          )}
+        {/* Main layout */}
+        <div className="home-layout">
+          {/* Left column: user info & weather */}
+          <div className="card">
+            {isGuest ? <p>You are browsing as a guest.</p> : <p>You are logged in as {user?.email}</p>}
+            <p>Saved recipes: {savedCount}</p>
+            <p>Tried recipes: {triedCount}</p>
 
-          <p>Saved recipes: {savedCount}</p>
-          <p>Tried recipes: {triedCount}</p>
-        </section>
+            {weather && (
+              <>
+                <hr />
+                <p>🌡 {weather.city}: {weather.temperature}°F</p>
+                <p>Weather: {getWeatherCategory(weather.temperature)}</p>
+              </>
+            )}
 
-        <section>
-          {weather && (
-            <>
-              <p>
-                Current temperature in {weather.city}: {weather.temperature}°F
-              </p>
-              <p>Weather category: {getWeatherCategory(weather.temperature)}</p>
-            </>
-          )}
-        </section>
+            {weatherError && <p className="error">{weatherError}</p>}
+            {error && <p className="error">{error}</p>}
+          </div>
 
-        <section>
-          {suggestedRecipes.length > 0 && (
-            <>
-              <h2>Recipe Suggestions For Today</h2>
+          {/* Right column: recipe suggestions */}
+          <div className="card">
+            <h2>Recipe Suggestions For Today</h2>
 
-              <div>
-                {suggestedRecipes.map((recipe) => (
-                  <article key={recipe.id}>
+            {suggestedRecipes.length > 0 ? (
+              <div className="recipe-grid">
+                {suggestedRecipes.map(recipe => (
+                  <article key={recipe.id} className="recipe-card">
                     <h3>{recipe.title}</h3>
-                    <img src={recipe.image} alt={recipe.title} width="200" />
+                    {recipe.image ? (
+                      <img src={recipe.image} alt={recipe.title} />
+                    ) : (
+                      <p>No image available</p>
+                    )}
                   </article>
                 ))}
               </div>
-            </>
-          )}
-        </section>
-
-        {weatherError && <p>{weatherError}</p>}
-        {error && <p>{error}</p>}
+            ) : <p>Loading recipes...</p>}
+          </div>
+        </div>
       </main>
     </>
   );
