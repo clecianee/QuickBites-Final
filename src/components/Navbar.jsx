@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import "../styles/navbar.css";
+=======
+>>>>>>> origin/liz
 import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
@@ -24,6 +27,7 @@ function Navbar() {
 
   return (
     <nav>
+<<<<<<< HEAD
       {/* LEFT: Logo */}
       <div className="nav-left">
         <img src="/logo.png" alt="QuickBites Logo" className="logo" />
@@ -41,6 +45,21 @@ function Navbar() {
         <span className="user-info">Hi, {loggedAs}</span>
         <button onClick={handleLogout}>Logout</button>
       </div>
+=======
+      <span><strong>QuickBites</strong></span>
+      {" | "}
+      <Link to="/home">Home</Link>
+      {" | "}
+      <Link to="/search">Search Recipes</Link>
+      {" | "}
+      <Link to="/my-recipes">My Recipes</Link>
+      {" | "}
+      <span>Logged as: {loggedAs}</span>
+      {" | "}
+      <button type="button" onClick={handleLogout}>
+        Log Off
+      </button>
+>>>>>>> origin/liz
     </nav>
   );
 }
