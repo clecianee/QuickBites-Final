@@ -1,42 +1,29 @@
-import icon from "../images/icon.png";
-import { Link, useNavigate } from "react-router-dom";
-import { logoutUser } from "../services/authService";
-import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 import "../styles/navbar.css";
+import logo from "../images/logo.png";
+import icon from "../images/icon.png";
 
 function Navbar() {
-  const navigate = useNavigate();
-  const { user, isGuest, clearGuestMode } = useAuth();
-
-  async function handleLogout() {
-    try {
-      if (!isGuest) {
-        await logoutUser();
-      }
-
-      clearGuestMode();
-      navigate("/");
-    } catch (err) {
-      console.error("Logout failed:", err);
-    }
-  }
-
-  const loggedAs = isGuest ? "Guest" : user?.email || "Unknown User";
-
   return (
     <nav className="navbar">
+      {/* Left: Logo */}
       <div className="navbar-left">
-        <span className="navbar-logo">QuickBites</span>
-        <Link to="/home" className="navbar-link">Home</Link>
-        <Link to="/search" className="navbar-link">Search Recipes</Link>
-        <Link to="/my-recipes" className="navbar-link">My Recipes</Link>
+        <Link to="/home" className="logo-link">
+          <img src={logo} alt="QuickBites Logo" className="logo" />
+          <span className="logo-text">QuickBites</span>
+        </Link>
       </div>
 
+      {/* Center: Links */}
+      <div className="navbar-center">
+        <Link to="/home" className="nav-link">Home</Link>
+        <Link to="/search" className="nav-link">Search</Link>
+        <Link to="/my-recipes" className="nav-link">My Recipes</Link>
+      </div>
+
+      {/* Right: optional icon */}
       <div className="navbar-right">
-        <span className="navbar-user">Logged as: {loggedAs}</span>
-        <button type="button" className="navbar-button" onClick={handleLogout}>
-          Log Off
-        </button>
+        <img src={icon} alt="App Icon" className="nav-icon" />
       </div>
     </nav>
   );
