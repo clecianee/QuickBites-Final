@@ -1,0 +1,12 @@
+.search-page {
+  text-align: center;
+}
+
+.search-page input {
+  width: 60%;
+  margin-right: 10px;
+}
+
+.search-page button {
+  background-color: var(--primary);
+}
