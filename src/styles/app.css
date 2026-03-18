@@ -1,0 +1,64 @@
+:root {
+  --primary: #0f4c5c;
+  --secondary: #ff7a1a;
+  --accent: #ffd166;
+  --background: #fffaf5;
+  --text: #2f2f2f;
+  --white: #ffffff;
+  --border: #e5e5e5;
+  --radius: 12px;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+}
+
+/* Headings */
+h1, h2, h3 {
+  margin: 10px 0;
+  color: var(--primary);
+}
+
+/* Buttons */
+button {
+  padding: 10px 14px;
+  background-color: var(--secondary);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #e96c12;
+}
+
+/* Inputs */
+input, textarea {
+  padding: 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  width: 100%;
+}
+
+/* Utility */
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .recipe-card {
+    width: 100%;
+  }
+
+  .search-page input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}

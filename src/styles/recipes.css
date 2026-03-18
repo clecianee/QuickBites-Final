@@ -1,0 +1,25 @@
+.recipe-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 15px;
+  margin: 10px;
+  width: 220px;
+  display: inline-block;
+  background: var(--white);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+}
+
+.recipe-card:hover {
+  transform: translateY(-5px);
+}
+
+.recipe-card img {
+  width: 100%;
+  border-radius: var(--radius);
+}
+
+.recipe-card h3 {
+  font-size: 16px;
+  margin: 10px 0;
+}

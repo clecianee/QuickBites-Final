@@ -1,0 +1,46 @@
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--primary);
+  padding: 12px 20px;
+}
+
+/* Left (logo) */
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 45px;
+}
+
+/* Center links */
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  color: var(--accent);
+}
+
+/* Right section */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-info {
+  color: white;
+  font-size: 14px;
+}
+
+/* Button override */
+.nav-right button {
+  background-color: var(--secondary);
+}
