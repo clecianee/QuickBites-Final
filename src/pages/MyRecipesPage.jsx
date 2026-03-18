@@ -1,3 +1,4 @@
+import "../styles/recipes.css";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
@@ -44,7 +45,6 @@ function MyRecipesPage() {
 
   async function handleDelete(recipeId) {
     if (!user) return;
-
     const confirmed = window.confirm("Are you sure you want to delete this recipe?");
     if (!confirmed) return;
 
@@ -63,20 +63,13 @@ function MyRecipesPage() {
 
   async function handleToggleTried(recipeId, currentValue) {
     if (!user) return;
-
     try {
-      await updateRecipeForUser(user.uid, recipeId, {
-        tried: !currentValue
-      });
-
+      await updateRecipeForUser(user.uid, recipeId, { tried: !currentValue });
       setRecipes((currentRecipes) =>
         currentRecipes.map((recipe) =>
-          recipe.id === recipeId
-            ? { ...recipe, tried: !currentValue }
-            : recipe
+          recipe.id === recipeId ? { ...recipe, tried: !currentValue } : recipe
         )
       );
-
       setMessage("Recipe updated.");
       setError("");
     } catch (err) {
@@ -97,18 +90,13 @@ function MyRecipesPage() {
 
   async function handleSaveNotes(recipeId) {
     if (!user) return;
-
     try {
       await updateRecipeForUser(user.uid, recipeId, { notes: draftNote });
-
       setRecipes((currentRecipes) =>
         currentRecipes.map((recipe) =>
-          recipe.id === recipeId
-            ? { ...recipe, notes: draftNote }
-            : recipe
+          recipe.id === recipeId ? { ...recipe, notes: draftNote } : recipe
         )
       );
-
       setEditingRecipeId(null);
       setDraftNote("");
       setMessage("Notes saved.");
@@ -129,17 +117,17 @@ function MyRecipesPage() {
         </header>
 
         {message && <p>{message}</p>}
-        {error && <p>{error}</p>}
+        {error && <p className="error">{error}</p>}
 
         <section>
           {recipes.length === 0 ? (
             <p>No saved recipes yet.</p>
           ) : (
-            <div>
+            <div className="recipe-grid">
               {recipes.map((recipe) => (
-                <article key={recipe.id}>
+                <article key={recipe.id} className="recipe-card">
                   <h3>{recipe.title}</h3>
-                  <img src={recipe.image} alt={recipe.title} width="150" />
+                  <img src={recipe.image} alt={recipe.title} />
                   <p>Ready in: {recipe.readyInMinutes ?? "N/A"} minutes</p>
                   <p>Servings: {recipe.servings ?? "N/A"}</p>
                   <p>Tried: {recipe.tried ? "Yes" : "No"}</p>
@@ -153,18 +141,14 @@ function MyRecipesPage() {
 
                   <section>
                     <p>Notes:</p>
-
                     {editingRecipeId === recipe.id ? (
                       <>
                         <textarea
                           value={draftNote}
-                          onChange={(event) => setDraftNote(event.target.value)}
+                          onChange={(e) => setDraftNote(e.target.value)}
                         />
                         <br />
-                        <button
-                          type="button"
-                          onClick={() => handleSaveNotes(recipe.id)}
-                        >
+                        <button type="button" onClick={() => handleSaveNotes(recipe.id)}>
                           Save Notes
                         </button>
                         <button type="button" onClick={handleCancelEditing}>
@@ -174,10 +158,7 @@ function MyRecipesPage() {
                     ) : (
                       <>
                         <p>{recipe.notes || "No notes yet."}</p>
-                        <button
-                          type="button"
-                          onClick={() => handleStartEditing(recipe)}
-                        >
+                        <button type="button" onClick={() => handleStartEditing(recipe)}>
                           Edit Notes
                         </button>
                       </>
@@ -189,8 +170,6 @@ function MyRecipesPage() {
                   <button type="button" onClick={() => handleDelete(recipe.id)}>
                     Delete
                   </button>
-
-                  <hr />
                 </article>
               ))}
             </div>
