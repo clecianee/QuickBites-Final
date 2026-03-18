@@ -120,77 +120,84 @@ function MyRecipesPage() {
   }
 
   return (
-    <div>
+    <>
       <Navbar />
-      <h1>My Saved Recipes</h1>
 
-      {message && <p>{message}</p>}
-      {error && <p>{error}</p>}
+      <main className="page-container">
+        <header>
+          <h1>My Saved Recipes</h1>
+        </header>
 
-      {recipes.length === 0 ? (
-        <p>No saved recipes yet.</p>
-      ) : (
-        <div>
-          {recipes.map((recipe) => (
-            <div key={recipe.id}>
-              <h3>{recipe.title}</h3>
-              <img src={recipe.image} alt={recipe.title} width="150" />
-              <p>Ready in: {recipe.readyInMinutes ?? "N/A"} minutes</p>
-              <p>Servings: {recipe.servings ?? "N/A"}</p>
-              <p>Tried: {recipe.tried ? "Yes" : "No"}</p>
+        {message && <p>{message}</p>}
+        {error && <p>{error}</p>}
 
-              <button
-                type="button"
-                onClick={() => handleToggleTried(recipe.id, recipe.tried)}
-              >
-                Mark as {recipe.tried ? "Not Tried" : "Tried"}
-              </button>
+        <section>
+          {recipes.length === 0 ? (
+            <p>No saved recipes yet.</p>
+          ) : (
+            <div>
+              {recipes.map((recipe) => (
+                <article key={recipe.id}>
+                  <h3>{recipe.title}</h3>
+                  <img src={recipe.image} alt={recipe.title} width="150" />
+                  <p>Ready in: {recipe.readyInMinutes ?? "N/A"} minutes</p>
+                  <p>Servings: {recipe.servings ?? "N/A"}</p>
+                  <p>Tried: {recipe.tried ? "Yes" : "No"}</p>
 
-              <div>
-                <p>Notes:</p>
+                  <button
+                    type="button"
+                    onClick={() => handleToggleTried(recipe.id, recipe.tried)}
+                  >
+                    Mark as {recipe.tried ? "Not Tried" : "Tried"}
+                  </button>
 
-                {editingRecipeId === recipe.id ? (
-                  <>
-                    <textarea
-                      value={draftNote}
-                      onChange={(event) => setDraftNote(event.target.value)}
-                    />
-                    <br />
-                    <button
-                      type="button"
-                      onClick={() => handleSaveNotes(recipe.id)}
-                    >
-                      Save Notes
-                    </button>
-                    <button type="button" onClick={handleCancelEditing}>
-                      Cancel
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <p>{recipe.notes || "No notes yet."}</p>
-                    <button
-                      type="button"
-                      onClick={() => handleStartEditing(recipe)}
-                    >
-                      Edit Notes
-                    </button>
-                  </>
-                )}
-              </div>
+                  <section>
+                    <p>Notes:</p>
 
-              <br />
+                    {editingRecipeId === recipe.id ? (
+                      <>
+                        <textarea
+                          value={draftNote}
+                          onChange={(event) => setDraftNote(event.target.value)}
+                        />
+                        <br />
+                        <button
+                          type="button"
+                          onClick={() => handleSaveNotes(recipe.id)}
+                        >
+                          Save Notes
+                        </button>
+                        <button type="button" onClick={handleCancelEditing}>
+                          Cancel
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <p>{recipe.notes || "No notes yet."}</p>
+                        <button
+                          type="button"
+                          onClick={() => handleStartEditing(recipe)}
+                        >
+                          Edit Notes
+                        </button>
+                      </>
+                    )}
+                  </section>
 
-              <button type="button" onClick={() => handleDelete(recipe.id)}>
-                Delete
-              </button>
+                  <br />
 
-              <hr />
+                  <button type="button" onClick={() => handleDelete(recipe.id)}>
+                    Delete
+                  </button>
+
+                  <hr />
+                </article>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
-    </div>
+          )}
+        </section>
+      </main>
+    </>
   );
 }
 

@@ -39,3 +39,25 @@ export async function getRecipeDetails(recipeId) {
 
   return data;
 }
+
+export async function getWeatherRecipeSuggestions(query) {
+  if (!API_KEY) {
+    throw new Error("Missing Spoonacular API key.");
+  }
+
+  const url =
+    `https://api.spoonacular.com/recipes/complexSearch` +
+    `?query=${encodeURIComponent(query)}` +
+    `&number=3` +
+    `&sort=random` +
+    `&apiKey=${API_KEY}`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to fetch weather recipe suggestions.");
+  }
+
+  return data.results || [];
+}
