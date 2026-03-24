@@ -26,7 +26,10 @@ function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <span className="navbar-logo">QuickBites</span>
+        <div className="navbar-brand">
+          <img src={icon} alt="QuickBites icon" className="navbar-icon" />
+          <span className="navbar-logo">QuickBites</span>
+        </div>
         <Link to="/home" className="navbar-link">Home</Link>
         <Link to="/search" className="navbar-link">Search Recipes</Link>
         <Link to="/my-recipes" className="navbar-link">My Recipes</Link>

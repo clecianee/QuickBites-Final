@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
+import logo from "../images/logo.png";
+import "../styles/auth.css";
 
 function AuthPage() {
   const navigate = useNavigate();
@@ -36,62 +38,65 @@ function AuthPage() {
   }
 
   return (
-    <div>
-      <h1>QuickBites</h1>
-      <p>Login, Register, or Continue as Guest</p>
+    <div className="auth-page">
+      <div className="auth-card">
+        <img src={logo} alt="QuickBites logo" className="auth-logo" />
 
-      <form onSubmit={handleLogin}>
-        <div>
-          <label htmlFor="email">Email</label>
-          <br />
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            required
-          />
+        <h1 className="auth-title">QuickBites</h1>
+        <p className="auth-subtitle">Login, register, or continue as guest</p>
+
+        <form className="auth-form" onSubmit={handleLogin}>
+          <div className="auth-field">
+            <label htmlFor="email" className="auth-label">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              className="auth-input"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+            />
+          </div>
+
+          <div className="auth-field">
+            <label htmlFor="password" className="auth-label">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              className="auth-input"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+            />
+          </div>
+
+          <button type="submit" className="auth-button auth-button-primary">
+            Login
+          </button>
+        </form>
+
+        <div className="auth-actions">
+          <Link to="/register" className="auth-link-wrapper">
+            <button type="button" className="auth-button auth-button-secondary">
+              Register
+            </button>
+          </Link>
+
+          <button
+            type="button"
+            className="auth-button auth-button-guest"
+            onClick={handleGuestAccess}
+          >
+            Continue as Guest
+          </button>
         </div>
 
-        <br />
-
-        <div>
-          <label htmlFor="password">Password</label>
-          <br />
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-          />
-        </div>
-
-        <br />
-
-        <button type="submit">Login</button>
-      </form>
-
-      <br />
-
-      <Link to="/register">
-        <button type="button">Register</button>
-      </Link>
-
-      <br />
-      <br />
-
-      <button type="button" onClick={handleGuestAccess}>
-        Continue as Guest
-      </button>
-
-      {error && (
-        <>
-          <br />
-          <br />
-          <p>{error}</p>
-        </>
-      )}
+        {error && <p className="auth-error">{error}</p>}
+      </div>
     </div>
   );
 }

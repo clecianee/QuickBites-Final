@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { registerUser } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
+import logo from "../images/logo.png";
 import "../styles/auth.css";
 
 function RegisterPage() {
@@ -35,55 +36,74 @@ function RegisterPage() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <h1>Register</h1>
+        <img src={logo} alt="QuickBites logo" className="auth-logo" />
 
-        <form onSubmit={handleRegister}>
-          <div>
-            <label htmlFor="email">Email</label>
-            <br />
+        <h1 className="auth-title">Create Account</h1>
+        <p className="auth-subtitle">Join QuickBites and start saving recipes</p>
+
+        <form className="auth-form" onSubmit={handleRegister}>
+          <div className="auth-field">
+            <label htmlFor="email" className="auth-label">
+              Email
+            </label>
             <input
               id="email"
               type="email"
+              className="auth-input"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               required
             />
           </div>
 
-          <div>
-            <label htmlFor="password">Password</label>
-            <br />
+          <div className="auth-field">
+            <label htmlFor="password" className="auth-label">
+              Password
+            </label>
             <input
               id="password"
               type="password"
+              className="auth-input"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               required
             />
           </div>
 
-          <div>
-            <label htmlFor="confirmPassword">Confirm Password</label>
-            <br />
+          <div className="auth-field">
+            <label htmlFor="confirmPassword" className="auth-label">
+              Confirm Password
+            </label>
             <input
               id="confirmPassword"
               type="password"
+              className="auth-input"
               value={confirmPassword}
               onChange={(event) => setConfirmPassword(event.target.value)}
               required
             />
           </div>
 
-          <div className="auth-actions">
-            <button type="submit">Create Account</button>
-          </div>
+          <button
+            type="submit"
+            className="auth-button auth-button-primary"
+          >
+            Create Account
+          </button>
         </form>
 
-        <Link to="/" className="auth-link">
-          Back to Login
-        </Link>
+        <div className="auth-actions">
+          <Link to="/" className="auth-link-wrapper">
+            <button
+              type="button"
+              className="auth-button auth-button-secondary"
+            >
+              Back to Login
+            </button>
+          </Link>
+        </div>
 
-        {error && <p>{error}</p>}
+        {error && <p className="auth-error">{error}</p>}
       </div>
     </div>
   );

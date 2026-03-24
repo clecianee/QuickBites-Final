@@ -6,19 +6,36 @@ function RecipeCard({
 }) {
   return (
     <div className="recipe-card">
-      <h3>{recipe.title}</h3>
-      <img src={recipe.image} alt={recipe.title} />
+      <div className="recipe-image-wrapper">
+        <img
+          src={recipe.image}
+          alt={recipe.title}
+          className="recipe-image"
+        />
+      </div>
 
-      <div className="recipe-card-buttons">
-        <button type="button" onClick={() => onViewDetails(recipe.id)}>
-          View Details
-        </button>
+      <div className="recipe-content">
+        <h3 className="recipe-title">{recipe.title}</h3>
 
-        {showSaveButton && (
-          <button type="button" onClick={() => onSaveRecipe(recipe)}>
-            Save Recipe
+        <div className="recipe-card-buttons">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => onViewDetails(recipe.id)}
+          >
+            View Details
           </button>
-        )}
+
+          {showSaveButton && (
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => onSaveRecipe(recipe)}
+            >
+              Save Recipe
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

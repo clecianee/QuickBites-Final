@@ -8,6 +8,7 @@ import {
   getWeatherSearchQuery,
 } from "../services/weatherService";
 import { getWeatherRecipeSuggestions } from "../services/recipeService";
+import "../styles/home.css";
 
 function HomePage() {
   const { user, isGuest } = useAuth();
@@ -71,43 +72,85 @@ function HomePage() {
     <>
       <Navbar />
 
-      <main className="page-container">
-        <header>
-          <h1>Welcome to QuickBites</h1>
+      <main className="home-page page">
+        <header className="home-hero card">
+          <div className="home-hero-text">
+            <h1 className="home-title">Welcome to QuickBites</h1>
+            <p className="home-subtitle">
+              Discover recipes, track your favorites, and get suggestions based
+              on today’s weather.
+            </p>
+
+            {isGuest ? (
+              <p className="home-user-status">You are browsing as a guest.</p>
+            ) : (
+              <p className="home-user-status">
+                You are logged in as <strong>{user?.email}</strong>.
+              </p>
+            )}
+          </div>
         </header>
 
-        <section>
-          {isGuest ? (
-            <p>You are browsing as a guest.</p>
-          ) : (
-            <p>You are logged in as {user?.email}.</p>
-          )}
+        <section className="home-stats-grid">
+          <div className="home-stat-card card">
+            <span className="home-stat-label">Saved Recipes</span>
+            <h2 className="home-stat-number">{savedCount}</h2>
+          </div>
 
-          <p>Saved recipes: {savedCount}</p>
-          <p>Tried recipes: {triedCount}</p>
+          <div className="home-stat-card card">
+            <span className="home-stat-label">Tried Recipes</span>
+            <h2 className="home-stat-number">{triedCount}</h2>
+          </div>
+
+          <div className="home-stat-card card">
+            <span className="home-stat-label">Today’s Weather</span>
+            <h2 className="home-stat-number home-stat-weather">
+              {weather ? `${weather.temperature}°F` : "--"}
+            </h2>
+          </div>
         </section>
 
-        <section>
-          {weather && (
-            <>
+        <section className="home-weather card">
+          <h2 className="home-section-title">Weather Overview</h2>
+
+          {weather ? (
+            <div className="home-weather-content">
               <p>
-                Current temperature in {weather.city}: {weather.temperature}°F
+                <span className="home-info-label">City:</span> {weather.city}
               </p>
-              <p>Weather category: {getWeatherCategory(weather.temperature)}</p>
-            </>
+              <p>
+                <span className="home-info-label">Temperature:</span>{" "}
+                {weather.temperature}°F
+              </p>
+              <p>
+                <span className="home-info-label">Category:</span>{" "}
+                {getWeatherCategory(weather.temperature)}
+              </p>
+            </div>
+          ) : (
+            <p className="home-muted">Loading weather...</p>
           )}
         </section>
 
-        <section>
+        <section className="home-suggestions">
           {suggestedRecipes.length > 0 && (
             <>
-              <h2>Recipe Suggestions For Today</h2>
+              <div className="home-section-header">
+                <h2 className="home-section-title">Recipe Suggestions For Today</h2>
+                <p className="home-section-subtitle">
+                  Picked to match today’s weather mood.
+                </p>
+              </div>
 
-              <div>
+              <div className="home-suggestions-grid">
                 {suggestedRecipes.map((recipe) => (
-                  <article key={recipe.id}>
-                    <h3>{recipe.title}</h3>
-                    <img src={recipe.image} alt={recipe.title} width="200" />
+                  <article key={recipe.id} className="home-suggestion-card card">
+                    <img
+                      src={recipe.image}
+                      alt={recipe.title}
+                      className="home-suggestion-image"
+                    />
+                    <h3 className="home-suggestion-title">{recipe.title}</h3>
                   </article>
                 ))}
               </div>
@@ -115,8 +158,8 @@ function HomePage() {
           )}
         </section>
 
-        {weatherError && <p>{weatherError}</p>}
-        {error && <p>{error}</p>}
+        {weatherError && <p className="home-error">{weatherError}</p>}
+        {error && <p className="home-error">{error}</p>}
       </main>
     </>
   );

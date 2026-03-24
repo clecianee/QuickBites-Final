@@ -1,5 +1,6 @@
 import "../styles/modal.css";
 import "../styles/recipes.css";
+import "../styles/search.css";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { searchRecipes, getRecipeDetails } from "../services/recipeService";
@@ -137,14 +138,17 @@ function SearchPage() {
     <>
       <Navbar />
 
-      <main className="page-container">
-        <header>
-          <h1>Search Recipes</h1>
+      <main className="search-page page">
+        <header className="search-header">
+          <h1 className="search-title">Search Recipes</h1>
+          <p className="search-subtitle">
+            Discover recipes based on your cravings and today’s weather.
+          </p>
         </header>
 
-        <section>
+        <section className="search-section weather-panel card">
           {isLoadingWeather ? (
-            <p>Loading weather...</p>
+            <p className="search-status">Loading weather...</p>
           ) : (
             <WeatherSection
               weather={weather}
@@ -165,39 +169,53 @@ function SearchPage() {
           )}
         </section>
 
-        <section>
-          <label htmlFor="city">City:</label>
-          <input
-            id="city"
-            type="text"
-            value={city}
-            onChange={(event) => setCity(event.target.value)}
-            placeholder="Enter a city"
-          />
-          <button type="button" onClick={() => setSubmittedCity(city)}>
-            Update City
-          </button>
+        <section className="search-section city-panel card">
+          <label htmlFor="city" className="search-label">
+            City
+          </label>
+          <div className="city-controls">
+            <input
+              id="city"
+              type="text"
+              className="search-input"
+              value={city}
+              onChange={(event) => setCity(event.target.value)}
+              placeholder="Enter a city"
+            />
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => setSubmittedCity(city)}
+            >
+              Update City
+            </button>
+          </div>
         </section>
 
-        <section>
-          <form onSubmit={handleSearch}>
+        <section className="search-section search-form-panel card">
+          <form className="search-form" onSubmit={handleSearch}>
             <input
               type="text"
+              className="search-input search-query-input"
               placeholder="Search for recipes..."
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               required
             />
-            <button type="submit" disabled={isSearching}>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={isSearching}
+            >
               {isSearching ? "Searching..." : "Search"}
             </button>
           </form>
         </section>
 
-        {message && <p>{message}</p>}
-        {error && <p>{error}</p>}
+        {message && <p className="search-message">{message}</p>}
+        {error && <p className="search-error">{error}</p>}
 
-        <section>
+        <section className="search-section results-section">
           <div className="recipe-list">
             {recipes.map((recipe) => (
               <RecipeCard
@@ -217,7 +235,9 @@ function SearchPage() {
           </div>
         </section>
 
-        {isLoadingDetails && <p>Loading recipe details...</p>}
+        {isLoadingDetails && (
+          <p className="search-status">Loading recipe details...</p>
+        )}
 
         <RecipeModal
           recipe={selectedRecipe}

@@ -1,0 +1,147 @@
+.home-page {
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+}
+
+.home-hero {
+  margin-bottom: 1.5rem;
+  background:
+    linear-gradient(135deg, rgba(11, 79, 108, 0.98), rgba(20, 108, 148, 0.95));
+  color: var(--qb-white);
+  border: none;
+}
+
+.home-hero-text {
+  max-width: 720px;
+}
+
+.home-title {
+  color: var(--qb-white);
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.home-subtitle {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.home-user-status {
+  color: var(--qb-white);
+  font-weight: 500;
+}
+
+.home-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.home-stat-card {
+  text-align: center;
+  border: 1px solid rgba(11, 79, 108, 0.08);
+}
+
+.home-stat-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--qb-text-light);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.home-stat-number {
+  font-size: 2rem;
+  color: var(--qb-blue-dark);
+}
+
+.home-stat-weather {
+  color: var(--qb-orange);
+}
+
+.home-weather {
+  margin-bottom: 1.8rem;
+  border: 1px solid rgba(11, 79, 108, 0.08);
+}
+
+.home-section-title {
+  font-size: 1.4rem;
+  margin-bottom: 0.85rem;
+  color: var(--qb-blue-dark);
+}
+
+.home-section-header {
+  margin-bottom: 1rem;
+}
+
+.home-section-subtitle {
+  color: var(--qb-text-light);
+}
+
+.home-weather-content {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.home-info-label {
+  font-weight: 700;
+  color: var(--qb-blue-dark);
+}
+
+.home-muted {
+  color: var(--qb-text-light);
+}
+
+.home-suggestions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.2rem;
+}
+
+.home-suggestion-card {
+  overflow: hidden;
+  border: 1px solid rgba(11, 79, 108, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home-suggestion-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 35px rgba(11, 79, 108, 0.18);
+}
+
+.home-suggestion-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 0.9rem;
+}
+
+.home-suggestion-title {
+  font-size: 1rem;
+  line-height: 1.35;
+  color: var(--qb-blue-dark);
+}
+
+.home-error {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  background: rgba(244, 124, 32, 0.14);
+  color: #9a3412;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .home-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-title {
+    font-size: 1.8rem;
+  }
+}

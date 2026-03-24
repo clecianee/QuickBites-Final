@@ -1,0 +1,127 @@
+/* =========================
+   NAVBAR CONTAINER
+========================= */
+.navbar {
+  background: var(--qb-blue-dark);
+  color: var(--qb-white);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 2rem;
+  box-shadow: var(--qb-shadow);
+}
+
+/* =========================
+   LEFT SIDE
+========================= */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Brand (icon + text) */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: 1rem;
+}
+
+.navbar-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.navbar-logo {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--qb-white);
+}
+
+/* =========================
+   LINKS
+========================= */
+.navbar-link {
+  color: var(--qb-white);
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  transition: 0.2s;
+}
+
+/* Hover effect */
+.navbar-link:hover {
+  color: var(--qb-orange);
+}
+
+/* Underline animation */
+.navbar-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: var(--qb-orange);
+  transition: width 0.2s ease;
+}
+
+.navbar-link:hover::after {
+  width: 100%;
+}
+
+/* =========================
+   RIGHT SIDE
+========================= */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navbar-user {
+  font-size: 0.9rem;
+  color: var(--qb-orange-soft);
+}
+
+/* =========================
+   BUTTON
+========================= */
+.navbar-button {
+  background: var(--qb-orange);
+  color: var(--qb-white);
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.navbar-button:hover {
+  background: var(--qb-orange-dark);
+  transform: translateY(-1px);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: flex-start;
+  }
+
+  .navbar-left {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .navbar-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

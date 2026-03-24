@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import {
   getSavedRecipesForUser,
   deleteSavedRecipeForUser,
-  updateRecipeForUser
+  updateRecipeForUser,
 } from "../services/recipeStoreService";
 
 function MyRecipesPage() {
@@ -45,7 +45,9 @@ function MyRecipesPage() {
   async function handleDelete(recipeId) {
     if (!user) return;
 
-    const confirmed = window.confirm("Are you sure you want to delete this recipe?");
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this recipe?"
+    );
     if (!confirmed) return;
 
     try {
@@ -66,7 +68,7 @@ function MyRecipesPage() {
 
     try {
       await updateRecipeForUser(user.uid, recipeId, {
-        tried: !currentValue
+        tried: !currentValue,
       });
 
       setRecipes((currentRecipes) =>
@@ -99,7 +101,9 @@ function MyRecipesPage() {
     if (!user) return;
 
     try {
-      await updateRecipeForUser(user.uid, recipeId, { notes: draftNote });
+      await updateRecipeForUser(user.uid, recipeId, {
+        notes: draftNote,
+      });
 
       setRecipes((currentRecipes) =>
         currentRecipes.map((recipe) =>
@@ -123,74 +127,118 @@ function MyRecipesPage() {
     <>
       <Navbar />
 
-      <main className="page-container">
-        <header>
-          <h1>My Saved Recipes</h1>
+      <main className="myrecipes-page page">
+        <header className="myrecipes-header">
+          <h1 className="myrecipes-title">My Saved Recipes</h1>
         </header>
 
-        {message && <p>{message}</p>}
-        {error && <p>{error}</p>}
+        {message && <p className="myrecipes-message">{message}</p>}
+        {error && <p className="myrecipes-error">{error}</p>}
 
-        <section>
+        <section className="myrecipes-section">
           {recipes.length === 0 ? (
-            <p>No saved recipes yet.</p>
+            <p className="myrecipes-empty">No saved recipes yet.</p>
           ) : (
-            <div>
+            <div className="myrecipes-grid">
               {recipes.map((recipe) => (
-                <article key={recipe.id}>
-                  <h3>{recipe.title}</h3>
-                  <img src={recipe.image} alt={recipe.title} width="150" />
-                  <p>Ready in: {recipe.readyInMinutes ?? "N/A"} minutes</p>
-                  <p>Servings: {recipe.servings ?? "N/A"}</p>
-                  <p>Tried: {recipe.tried ? "Yes" : "No"}</p>
+                <article key={recipe.id} className="myrecipes-card card">
+                  <img
+                    src={recipe.image}
+                    alt={recipe.title}
+                    className="myrecipes-image"
+                  />
 
-                  <button
-                    type="button"
-                    onClick={() => handleToggleTried(recipe.id, recipe.tried)}
-                  >
-                    Mark as {recipe.tried ? "Not Tried" : "Tried"}
-                  </button>
+                  <h3 className="myrecipes-card-title">{recipe.title}</h3>
 
-                  <section>
-                    <p>Notes:</p>
+                  <div className="myrecipes-info">
+                    <p>
+                      <strong>Ready:</strong>{" "}
+                      {recipe.readyInMinutes ?? "N/A"} min
+                    </p>
+                    <p>
+                      <strong>Servings:</strong> {recipe.servings ?? "N/A"}
+                    </p>
+                    <p>
+                      <strong>Status:</strong>{" "}
+                      <span
+                        className={
+                          recipe.tried
+                            ? "myrecipes-badge tried"
+                            : "myrecipes-badge not-tried"
+                        }
+                      >
+                        {recipe.tried ? "Tried" : "Not Tried"}
+                      </span>
+                    </p>
+                  </div>
+
+                  <div className="myrecipes-actions">
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() =>
+                        handleToggleTried(recipe.id, recipe.tried)
+                      }
+                    >
+                      Mark as {recipe.tried ? "Not Tried" : "Tried"}
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => handleDelete(recipe.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+
+                  <div className="myrecipes-notes">
+                    <p className="myrecipes-notes-label">Notes</p>
 
                     {editingRecipeId === recipe.id ? (
                       <>
                         <textarea
+                          className="myrecipes-textarea"
                           value={draftNote}
-                          onChange={(event) => setDraftNote(event.target.value)}
+                          onChange={(event) =>
+                            setDraftNote(event.target.value)
+                          }
                         />
-                        <br />
-                        <button
-                          type="button"
-                          onClick={() => handleSaveNotes(recipe.id)}
-                        >
-                          Save Notes
-                        </button>
-                        <button type="button" onClick={handleCancelEditing}>
-                          Cancel
-                        </button>
+
+                        <div className="myrecipes-note-buttons">
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={() => handleSaveNotes(recipe.id)}
+                          >
+                            Save
+                          </button>
+
+                          <button
+                            type="button"
+                            className="btn btn-ghost"
+                            onClick={handleCancelEditing}
+                          >
+                            Cancel
+                          </button>
+                        </div>
                       </>
                     ) : (
                       <>
-                        <p>{recipe.notes || "No notes yet."}</p>
+                        <p className="myrecipes-note-text">
+                          {recipe.notes || "No notes yet."}
+                        </p>
+
                         <button
                           type="button"
+                          className="btn btn-ghost"
                           onClick={() => handleStartEditing(recipe)}
                         >
                           Edit Notes
                         </button>
                       </>
                     )}
-                  </section>
-
-                  <br />
-
-                  <button type="button" onClick={() => handleDelete(recipe.id)}>
-                    Delete
-                  </button>
-
-                  <hr />
+                  </div>
                 </article>
               ))}
             </div>
