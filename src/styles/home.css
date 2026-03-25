@@ -82,6 +82,29 @@
   color: var(--qb-text-light);
 }
 
+.home-suggestion-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* Saved button green like SearchPage */
+.btn-saved-green {
+  background-color: #22c55e; /* same green as SearchPage */
+  color: white;
+  cursor: default;
+}
+
+/* Banner same green as saved button */
+.home-message {
+  background-color: #22c55e; /* green banner */
+  color: #ffffff; /* white text for contrast */
+  padding: 0.8rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
 .home-weather-content {
   display: grid;
   gap: 0.7rem;
