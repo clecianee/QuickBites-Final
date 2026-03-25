@@ -1,5 +1,5 @@
 import icon from "../images/icon.png";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { logoutUser } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
 import "../styles/navbar.css";
@@ -30,9 +30,9 @@ function Navbar() {
           <img src={icon} alt="QuickBites icon" className="navbar-icon" />
           <span className="navbar-logo">QuickBites</span>
         </div>
-        <Link to="/home" className="navbar-link">Home</Link>
-        <Link to="/search" className="navbar-link">Search Recipes</Link>
-        <Link to="/my-recipes" className="navbar-link">My Recipes</Link>
+        <NavLink to="/home" className="navbar-link">Home</NavLink>
+        <NavLink to="/search" className="navbar-link">Search Recipes</NavLink>
+        <NavLink to="/my-recipes" className="navbar-link">My Recipes</NavLink>
       </div>
 
       <div className="navbar-right">
