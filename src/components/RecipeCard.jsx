@@ -1,19 +1,4 @@
-import { useState } from "react";
-
-function RecipeCard({ recipe, onViewDetails, onSaveRecipe, showSaveButton = false, onShowBanner }) {
-  // Only track saved for Search page
-  const [isSaved, setIsSaved] = useState(false);
-
-  const handleSave = () => {
-    if (!isSaved) {
-      onSaveRecipe(recipe);     // Save to database
-      setIsSaved(true);         // Change button to Saved
-      if (onShowBanner) {       // Only show banner if prop is passed (SearchPage)
-        onShowBanner(`${recipe.title} added to your saved recipes`);
-      }
-    }
-  };
-
+function RecipeCard({ recipe, onViewDetails, onSaveRecipe, showSaveButton = false, isSaved = false }) {
   return (
     <div className="recipe-card">
       <div className="recipe-image-wrapper">
@@ -24,20 +9,15 @@ function RecipeCard({ recipe, onViewDetails, onSaveRecipe, showSaveButton = fals
         <h3 className="recipe-title">{recipe.title}</h3>
 
         <div className="recipe-card-buttons">
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={() => onViewDetails(recipe.id)}
-          >
+          <button type="button" className="btn btn-secondary" onClick={() => onViewDetails(recipe.id)}>
             View Details
           </button>
 
           {showSaveButton && (
             <button
               type="button"
-              className={`btn ${isSaved ? "btn-success" : "btn-primary"}`}
-              onClick={handleSave}
-              disabled={isSaved}
+              className={`btn ${isSaved ? "btn-saved-green" : "btn-primary"}`}
+              onClick={onSaveRecipe}
             >
               {isSaved ? "Saved" : "Save Recipe"}
             </button>
