@@ -4,7 +4,7 @@ import "../styles/search.css";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { searchRecipes, getRecipeDetails } from "../services/recipeService";
-import { saveRecipeForUser, getSavedRecipesForUser } from "../services/recipeStoreService";
+import { saveRecipeForUser, getSavedRecipesForUser, deleteSavedRecipeForUser } from "../services/recipeStoreService";
 import { useAuth } from "../context/AuthContext";
 import { getCurrentTemperature, getWeatherCategory, getWeatherSearchQuery } from "../services/weatherService";
 import RecipeCard from "../components/RecipeCard";
@@ -17,7 +17,6 @@ function SearchPage() {
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const [bannerMessage, setBannerMessage] = useState(""); // banner state
   const { user, isGuest } = useAuth();
   const [savedRecipeIds, setSavedRecipeIds] = useState([]);
   const [weather, setWeather] = useState(null);
@@ -28,6 +27,21 @@ function SearchPage() {
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [isLoadingWeather, setIsLoadingWeather] = useState(false);
 
+  // Load saved recipes on mount
+  useEffect(() => {
+    async function loadSavedRecipes() {
+      if (!user) return;
+      try {
+        const savedRecipes = await getSavedRecipesForUser(user.uid);
+        setSavedRecipeIds(savedRecipes.map((r) => r.id));
+      } catch (err) {
+        console.error("Failed to load saved recipes:", err);
+      }
+    }
+    loadSavedRecipes();
+  }, [user]);
+
+  // Weather suggestions
   useEffect(() => {
     async function loadWeatherSuggestions() {
       setIsLoadingWeather(true);
@@ -37,8 +51,8 @@ function SearchPage() {
 
         const category = getWeatherCategory(weatherData.temperature);
         const weatherSearchQuery = getWeatherSearchQuery(category);
-
         setQuery(weatherSearchQuery);
+
         setSuggestedRecipes([]);
         setRecipes([]);
         setMessage(`Ready to search ${weatherSearchQuery} recipes based on today’s weather.`);
@@ -50,7 +64,6 @@ function SearchPage() {
         setIsLoadingWeather(false);
       }
     }
-
     loadWeatherSuggestions();
   }, [submittedCity]);
 
@@ -76,7 +89,6 @@ function SearchPage() {
   async function handleViewDetails(recipeId) {
     setError("");
     setIsLoadingDetails(true);
-
     try {
       const details = await getRecipeDetails(recipeId);
       setSelectedRecipe(details);
@@ -88,12 +100,8 @@ function SearchPage() {
     }
   }
 
-  const handleShowBanner = (msg) => {
-    setBannerMessage(msg);
-    setTimeout(() => setBannerMessage(""), 3000);
-  };
-
-  async function handleSaveRecipe(recipe) {
+  // Save / Unsave toggle
+  async function handleSaveToggle(recipe) {
     if (isGuest) {
       setError("Guests cannot save recipes.");
       return;
@@ -103,35 +111,36 @@ function SearchPage() {
       return;
     }
 
-    try {
-      let currentSavedIds = savedRecipeIds;
-
-      if (currentSavedIds.length === 0) {
-        const savedRecipes = await getSavedRecipesForUser(user.uid);
-        currentSavedIds = savedRecipes.map((item) => item.id);
-        setSavedRecipeIds(currentSavedIds);
+    if (savedRecipeIds.includes(recipe.id)) {
+      // Unsave
+      try {
+        await deleteSavedRecipeForUser(user.uid, recipe.id);
+        setSavedRecipeIds((current) => current.filter((id) => id !== recipe.id));
+        setMessage(`${recipe.title} removed from your saved recipes`);
+        setTimeout(() => setMessage(""), 3000);
+      } catch (err) {
+        console.error("Unsave error:", err);
+        setError("Failed to remove recipe.");
+        setTimeout(() => setError(""), 3000);
       }
-
-      if (currentSavedIds.includes(recipe.id)) {
-        setMessage(`Recipe already saved: ${recipe.title}`);
-        setError("");
-        return;
+    } else {
+      // Save
+      try {
+        await saveRecipeForUser(user.uid, recipe);
+        setSavedRecipeIds((current) => [...current, recipe.id]);
+        setMessage(`${recipe.title} added to your saved recipes!`);
+        setTimeout(() => setMessage(""), 3000);
+      } catch (err) {
+        console.error("Save error:", err);
+        setError("Failed to save recipe.");
+        setTimeout(() => setError(""), 3000);
       }
-
-      await saveRecipeForUser(user.uid, recipe);
-      setSavedRecipeIds((currentIds) => [...currentIds, recipe.id]);
-      handleShowBanner(`${recipe.title} added to your saved recipes`);
-      setError("");
-    } catch (err) {
-      console.error("Save recipe error:", err);
-      setError("Failed to save recipe.");
     }
   }
 
   return (
     <>
       <Navbar />
-      {bannerMessage && <div className="banner banner-show">{bannerMessage}</div>}
 
       <main className="search-page page">
         <header className="search-header">
@@ -155,9 +164,9 @@ function SearchPage() {
                     key={recipe.id}
                     recipe={recipe}
                     onViewDetails={handleViewDetails}
-                    onSaveRecipe={handleSaveRecipe}
+                    onSaveRecipe={() => handleSaveToggle(recipe)}
                     showSaveButton={true}
-                    onShowBanner={handleShowBanner}
+                    isSaved={savedRecipeIds.includes(recipe.id)}
                   />
                 ))}
               </div>
@@ -176,11 +185,7 @@ function SearchPage() {
               onChange={(event) => setCity(event.target.value)}
               placeholder="Enter a city"
             />
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={() => setSubmittedCity(city)}
-            >
+            <button type="button" className="btn btn-secondary" onClick={() => setSubmittedCity(city)}>
               Update City
             </button>
           </div>
@@ -196,11 +201,7 @@ function SearchPage() {
               onChange={(event) => setQuery(event.target.value)}
               required
             />
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={isSearching}
-            >
+            <button type="submit" className="btn btn-primary" disabled={isSearching}>
               {isSearching ? "Searching..." : "Search"}
             </button>
           </form>
@@ -216,9 +217,9 @@ function SearchPage() {
                 key={recipe.id}
                 recipe={recipe}
                 onViewDetails={handleViewDetails}
-                onSaveRecipe={handleSaveRecipe}
+                onSaveRecipe={() => handleSaveToggle(recipe)}
                 showSaveButton={true}
-                onShowBanner={handleShowBanner}
+                isSaved={savedRecipeIds.includes(recipe.id)}
               />
             ))}
           </div>
@@ -226,10 +227,9 @@ function SearchPage() {
 
         {isLoadingDetails && <p className="search-status">Loading recipe details...</p>}
 
-        <RecipeModal
-          recipe={selectedRecipe}
-          onClose={() => setSelectedRecipe(null)}
-        />
+        {selectedRecipe && (
+          <RecipeModal recipe={selectedRecipe} onClose={() => setSelectedRecipe(null)} />
+        )}
       </main>
     </>
   );
