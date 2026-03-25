@@ -4,16 +4,9 @@ import "../styles/search.css";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { searchRecipes, getRecipeDetails } from "../services/recipeService";
-import {
-  saveRecipeForUser,
-  getSavedRecipesForUser,
-} from "../services/recipeStoreService";
+import { saveRecipeForUser, getSavedRecipesForUser } from "../services/recipeStoreService";
 import { useAuth } from "../context/AuthContext";
-import {
-  getCurrentTemperature,
-  getWeatherCategory,
-  getWeatherSearchQuery,
-} from "../services/weatherService";
+import { getCurrentTemperature, getWeatherCategory, getWeatherSearchQuery } from "../services/weatherService";
 import RecipeCard from "../components/RecipeCard";
 import RecipeModal from "../components/RecipeModal";
 import WeatherSection from "../components/WeatherSection";
@@ -24,6 +17,7 @@ function SearchPage() {
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [bannerMessage, setBannerMessage] = useState(""); // banner state
   const { user, isGuest } = useAuth();
   const [savedRecipeIds, setSavedRecipeIds] = useState([]);
   const [weather, setWeather] = useState(null);
@@ -37,7 +31,6 @@ function SearchPage() {
   useEffect(() => {
     async function loadWeatherSuggestions() {
       setIsLoadingWeather(true);
-
       try {
         const weatherData = await getCurrentTemperature(submittedCity);
         setWeather(weatherData);
@@ -46,12 +39,9 @@ function SearchPage() {
         const weatherSearchQuery = getWeatherSearchQuery(category);
 
         setQuery(weatherSearchQuery);
-
         setSuggestedRecipes([]);
         setRecipes([]);
-        setMessage(
-          `Ready to search ${weatherSearchQuery} recipes based on today’s weather.`
-        );
+        setMessage(`Ready to search ${weatherSearchQuery} recipes based on today’s weather.`);
         setError("");
       } catch (err) {
         console.error("Weather suggestions error:", err);
@@ -98,12 +88,16 @@ function SearchPage() {
     }
   }
 
+  const handleShowBanner = (msg) => {
+    setBannerMessage(msg);
+    setTimeout(() => setBannerMessage(""), 3000);
+  };
+
   async function handleSaveRecipe(recipe) {
     if (isGuest) {
       setError("Guests cannot save recipes.");
       return;
     }
-
     if (!user) {
       setError("You must be logged in to save recipes.");
       return;
@@ -126,7 +120,7 @@ function SearchPage() {
 
       await saveRecipeForUser(user.uid, recipe);
       setSavedRecipeIds((currentIds) => [...currentIds, recipe.id]);
-      setMessage(`Saved recipe: ${recipe.title}`);
+      handleShowBanner(`${recipe.title} added to your saved recipes`);
       setError("");
     } catch (err) {
       console.error("Save recipe error:", err);
@@ -137,6 +131,7 @@ function SearchPage() {
   return (
     <>
       <Navbar />
+      {bannerMessage && <div className="banner banner-show">{bannerMessage}</div>}
 
       <main className="search-page page">
         <header className="search-header">
@@ -152,9 +147,7 @@ function SearchPage() {
           ) : (
             <WeatherSection
               weather={weather}
-              title={`Recommended for today (${getWeatherCategory(
-                weather?.temperature
-              )})`}
+              title={`Recommended for today (${getWeatherCategory(weather?.temperature)})`}
             >
               <div className="recipe-list">
                 {suggestedRecipes.map((recipe) => (
@@ -162,6 +155,9 @@ function SearchPage() {
                     key={recipe.id}
                     recipe={recipe}
                     onViewDetails={handleViewDetails}
+                    onSaveRecipe={handleSaveRecipe}
+                    showSaveButton={true}
+                    onShowBanner={handleShowBanner}
                   />
                 ))}
               </div>
@@ -170,9 +166,7 @@ function SearchPage() {
         </section>
 
         <section className="search-section city-panel card">
-          <label htmlFor="city" className="search-label">
-            City
-          </label>
+          <label htmlFor="city" className="search-label">City</label>
           <div className="city-controls">
             <input
               id="city"
@@ -222,22 +216,15 @@ function SearchPage() {
                 key={recipe.id}
                 recipe={recipe}
                 onViewDetails={handleViewDetails}
-                onSaveRecipe={(recipeToSave) =>
-                  handleSaveRecipe(
-                    selectedRecipe && selectedRecipe.id === recipeToSave.id
-                      ? selectedRecipe
-                      : recipeToSave
-                  )
-                }
+                onSaveRecipe={handleSaveRecipe}
                 showSaveButton={true}
+                onShowBanner={handleShowBanner}
               />
             ))}
           </div>
         </section>
 
-        {isLoadingDetails && (
-          <p className="search-status">Loading recipe details...</p>
-        )}
+        {isLoadingDetails && <p className="search-status">Loading recipe details...</p>}
 
         <RecipeModal
           recipe={selectedRecipe}
