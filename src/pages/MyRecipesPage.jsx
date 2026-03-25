@@ -6,6 +6,8 @@ import {
   deleteSavedRecipeForUser,
   updateRecipeForUser,
 } from "../services/recipeStoreService";
+import { getRecipeDetails } from "../services/recipeService";
+import RecipeModal from "../components/RecipeModal";
 
 function MyRecipesPage() {
   const { user, isGuest } = useAuth();
@@ -14,6 +16,8 @@ function MyRecipesPage() {
   const [message, setMessage] = useState("");
   const [editingRecipeId, setEditingRecipeId] = useState(null);
   const [draftNote, setDraftNote] = useState("");
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [isLoadingDetails, setIsLoadingDetails] = useState(false);
 
   useEffect(() => {
     async function loadRecipes() {
@@ -123,6 +127,20 @@ function MyRecipesPage() {
     }
   }
 
+  // --- View Details ---
+  async function handleViewDetails(recipeId) {
+    setIsLoadingDetails(true);
+    try {
+      const details = await getRecipeDetails(recipeId);
+      setSelectedRecipe(details);
+    } catch (err) {
+      console.error("Details error:", err);
+      setError("Failed to load recipe details.");
+    } finally {
+      setIsLoadingDetails(false);
+    }
+  }
+
   return (
     <>
       <Navbar />
@@ -152,13 +170,6 @@ function MyRecipesPage() {
 
                   <div className="myrecipes-info">
                     <p>
-                      <strong>Ready:</strong>{" "}
-                      {recipe.readyInMinutes ?? "N/A"} min
-                    </p>
-                    <p>
-                      <strong>Servings:</strong> {recipe.servings ?? "N/A"}
-                    </p>
-                    <p>
                       <strong>Status:</strong>{" "}
                       <span
                         className={
@@ -176,11 +187,9 @@ function MyRecipesPage() {
                     <button
                       type="button"
                       className="btn btn-secondary"
-                      onClick={() =>
-                        handleToggleTried(recipe.id, recipe.tried)
-                      }
+                      onClick={() => handleViewDetails(recipe.id)}
                     >
-                      Mark as {recipe.tried ? "Not Tried" : "Tried"}
+                      View Details
                     </button>
 
                     <button
@@ -189,6 +198,16 @@ function MyRecipesPage() {
                       onClick={() => handleDelete(recipe.id)}
                     >
                       Delete
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() =>
+                        handleToggleTried(recipe.id, recipe.tried)
+                      }
+                    >
+                      Mark as {recipe.tried ? "Not Tried" : "Tried"}
                     </button>
                   </div>
 
@@ -244,6 +263,15 @@ function MyRecipesPage() {
             </div>
           )}
         </section>
+
+        {isLoadingDetails && <p>Loading recipe details...</p>}
+
+        {selectedRecipe && (
+          <RecipeModal
+            recipe={selectedRecipe}
+            onClose={() => setSelectedRecipe(null)}
+          />
+        )}
       </main>
     </>
   );
