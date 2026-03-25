@@ -72,6 +72,16 @@
   width: 100%;
 }
 
+.navbar-link.active {
+  color: var(--qb-orange); /* highlight text */
+  font-weight: 600;
+}
+
+/* Keep underline visible for active page */
+.navbar-link.active::after {
+  width: 100%;
+}
+
 /* =========================
    RIGHT SIDE
 ========================= */
