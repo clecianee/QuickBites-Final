@@ -109,3 +109,20 @@
   transform: translateX(-50%) translateY(0);
   opacity: 1;
 }
+
+
+.btn-saved-green {
+  background-color: #22c55e; /* green */
+  color: white;
+  cursor: pointer;
+}
+
+
+.search-message {
+  background-color: #22c55e; /* green banner */
+  color: white;
+  padding: 0.8rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
